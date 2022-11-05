@@ -1,7 +1,8 @@
 var citySearchBtn = document.querySelector("#searchBtn");
 var citySearchField = document.querySelector("#searchField");
 var resultsSection = document.querySelector('#results');
-var testUrl
+var historySection = document.querySelector('#searchHistory');
+var recentSearches = JSON.parse(localStorage.getItem('storedSearches'));
 
 var key = 'b261f7124e086b6cd8b5cdda662c5ba8';
 
@@ -12,10 +13,17 @@ function displayResults(cityName) {
             .then(function (response) {
                 return response.json();
             }).then(function (result) {
-                if (result) {
+                if (result.length) {
+                    let cityTitle = document.createElement('h2');
+                    cityTitle.textContent = "Here's the forecast for " + cityName + ":";
+                    resultsSection.appendChild(cityTitle);
                     let coordinates = "lat=" + result[0].lat + "&lon=" + result[0].lon;
                     createCurrentCard(coordinates);
                     createForecastCards(coordinates);
+                    if (citySearchField.value) {
+                        addToHistory(citySearchField.value);
+                    }
+                    citySearchField.value = '';
                 } else {
 
                 }
@@ -85,46 +93,45 @@ function createForecastCards(coordinates) {
         .then(function (response) {
             return response.json();
         }).then(function (result) {
-            console.log(result);
             let forecastTimestamps = pickForecasts(result);
             for (i = 0; i < 5; i++) {
                 let main = result.list[forecastTimestamps[i]].weather[0].main;
                 let currentCard = document.createElement('div');
-                let displayDate = document.createElement('h3');
+                let displayDate = document.createElement('h4');
                 let mainIcon = document.createElement('i');
-                let displayMain = document.createElement('h3');
+                let displayMain = document.createElement('h4');
                 let displayInfo = document.createElement('div');
 
-                currentCard.setAttribute('class', 'card currentWeather');
+                currentCard.setAttribute('class', 'card forecastWeather');
                 displayDate.textContent = moment(result.list[forecastTimestamps[i]].dt_txt).format('MMM Do YYYY');
                 displayMain.textContent = main;
                 displayMain.setAttribute('style', "display: inline");
                 displayInfo.setAttribute('class', 'card-content');
-                displayInfo.textContent = "Temp: " + result.list[forecastTimestamps[i]].main.temp 
-                + "\u00B0\nHumidity: " + result.list[forecastTimestamps[i]].main.humidity + "%\nWind Speed: "
-                 + result.list[forecastTimestamps[i]].wind.speed + " mph";
+                displayInfo.textContent = "Temp: " + result.list[forecastTimestamps[i]].main.temp
+                    + "\u00B0\nHumidity: " + result.list[forecastTimestamps[i]].main.humidity + "%\nWind Speed: "
+                    + result.list[forecastTimestamps[i]].wind.speed + " mph";
 
                 switch (main) {
                     case "Thunderstorm":
-                        mainIcon.setAttribute('class', 'fa-solid fa-cloud-bolt fa-2x')
+                        mainIcon.setAttribute('class', 'fa-solid fa-cloud-bolt')
                         break;
                     case "Drizzle":
-                        mainIcon.setAttribute('class', 'fa-solid fa-cloud-rain fa-2x')
+                        mainIcon.setAttribute('class', 'fa-solid fa-cloud-rain')
                         break;
                     case "Rain":
-                        mainIcon.setAttribute('class', 'fa-solid fa-cloud-showers-heavy fa-2x')
+                        mainIcon.setAttribute('class', 'fa-solid fa-cloud-showers-heavy')
                         break;
                     case "Snow":
-                        mainIcon.setAttribute('class', 'fa-solid fa-snowflake fa-2x')
+                        mainIcon.setAttribute('class', 'fa-solid fa-snowflake')
                         break;
                     case "Clear":
-                        mainIcon.setAttribute('class', 'fa-solid fa-sun fa-2x')
+                        mainIcon.setAttribute('class', 'fa-solid fa-sun')
                         break;
                     case "Clouds":
-                        mainIcon.setAttribute('class', 'fa-solid fa-cloud fa-2x')
+                        mainIcon.setAttribute('class', 'fa-solid fa-cloud')
                         break;
                     default:
-                        mainIcon.setAttribute('class', 'fa-solid fa-smog fa-2x')
+                        mainIcon.setAttribute('class', 'fa-solid fa-smog')
 
                 }
 
@@ -158,17 +165,50 @@ function clearResults() {
     });
 }
 
-function displayHistory() {
+function clearHistory() {
 
 }
 
-function clearHistory() {
-
+function addToHistory(cityName) {
+    for (i = 0; i < recentSearches.length; i++) {
+        if (recentSearches[i] == cityName) {
+            return;
+        }
+    }
+    recentSearches.push(cityName);
+    localStorage.setItem('storedSearches', JSON.stringify(recentSearches));
+    let newButton = document.createElement('button');
+    newButton.setAttribute('class', 'cityBtn');
+    newButton.textContent = cityName;
+    historySection.appendChild(newButton);
+    newButton.addEventListener('click', function () {
+        clearResults();
+        displayResults(newButton.textContent);
+    })
 }
 
 citySearchBtn.addEventListener('click', function (event) {
     event.preventDefault();
     clearResults();
     displayResults(citySearchField.value);
-    citySearchField.textContent = '';
 })
+
+function init() {
+    if (recentSearches) {
+        for (i = 0; i < recentSearches.length; i++) {
+            let newButton = document.createElement('button');
+            newButton.setAttribute('class', 'cityBtn');
+            newButton.textContent = recentSearches[i];
+            historySection.appendChild(newButton);
+            newButton.addEventListener('click', function () {
+                clearResults();
+                displayResults(newButton.textContent);
+            })
+        }
+
+    } else {
+        recentSearches = [];
+    }
+}
+
+init();

@@ -12,7 +12,21 @@ header{
 
 body{
     background-color: var(--two);
-    height: 100vh;
+    min-height: 100vh;
+    height: fit-content;
+}
+
+form{
+    margin: 24px;
+}
+
+hr{
+    height: 2px;
+    border-width: 0;
+    color: var(--fourfour);
+    background-color: var(--four);
+    width: 80%;
+    margin: 16px;
 }
 
 i{
@@ -25,25 +39,57 @@ h1{
     color: var(--three);
     text-align: center;
     font-size: 48px;
+    font-weight: bolder;
+}
+
+h2{
+    color: var(--three);
+    text-align: center;
+    font-size: 36px;
+    text-decoration: underline;
 }
 
 h3{
-    /* display: inline; */
     margin-left: 24px;
     font-size: 28px;
+}
+
+h4{
+    margin-left: 16px;
+    font-size: 20px;
+}
+
+h5{
+    color: var(--three);
+    font-size: 20px;
+    margin: 24px;
 }
 
 .card-content{
     white-space: pre;
 }
 
-
 .currentWeather {
     background-color: var(--three);
     color: var(--five);
+    margin: 24px;
 }
 
 .forecastWeather {
     background-color: var(--three);
     color: var(--five);
+    display: inline-block;
+    margin: 24px;
+}
+
+.forecastWeather .card-content{
+    font-size: 12px;
+}
+
+.cityBtn{
+    
+}
+
+.columns:not(:last-child){
+    margin-bottom: 0;
 }
