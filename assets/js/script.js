@@ -2,6 +2,7 @@ var citySearchBtn = document.querySelector("#searchBtn");
 var citySearchField = document.querySelector("#searchField");
 var resultsSection = document.querySelector('#results');
 var historySection = document.querySelector('#searchHistory');
+var clearButton = document.querySelector('#clearHistory');
 var recentSearches = JSON.parse(localStorage.getItem('storedSearches'));
 
 var key = 'b261f7124e086b6cd8b5cdda662c5ba8';
@@ -25,12 +26,16 @@ function displayResults(cityName) {
                     }
                     citySearchField.value = '';
                 } else {
-
+                    let errorMessage = document.createElement('h2');
+                    errorMessage.textContent = '"' + cityName + '" was not found. Please enter a city name.';
+                    resultsSection.appendChild(errorMessage);
                 }
 
             })
     } else {
-
+        let errorMessage = document.createElement('h2');
+        errorMessage.textContent = 'Please enter a city name!';
+        resultsSection.appendChild(errorMessage);
     }
 }
 
@@ -165,10 +170,6 @@ function clearResults() {
     });
 }
 
-function clearHistory() {
-
-}
-
 function addToHistory(cityName) {
     for (i = 0; i < recentSearches.length; i++) {
         if (recentSearches[i] == cityName) {
@@ -178,7 +179,7 @@ function addToHistory(cityName) {
     recentSearches.push(cityName);
     localStorage.setItem('storedSearches', JSON.stringify(recentSearches));
     let newButton = document.createElement('button');
-    newButton.setAttribute('class', 'cityBtn');
+    newButton.setAttribute('class', 'city');
     newButton.textContent = cityName;
     historySection.appendChild(newButton);
     newButton.addEventListener('click', function () {
@@ -193,11 +194,22 @@ citySearchBtn.addEventListener('click', function (event) {
     displayResults(citySearchField.value);
 })
 
+clearButton.addEventListener('click', function () {
+    recentSearches = [];
+    localStorage.setItem('storedSearches', JSON.stringify(recentSearches));
+    var historyElements = Array.from(historySection.children);
+    historyElements.forEach(element => {
+        if (element.className == 'city') {
+            element.remove();
+        }
+    });
+})
+
 function init() {
     if (recentSearches) {
         for (i = 0; i < recentSearches.length; i++) {
             let newButton = document.createElement('button');
-            newButton.setAttribute('class', 'cityBtn');
+            newButton.setAttribute('class', 'city');
             newButton.textContent = recentSearches[i];
             historySection.appendChild(newButton);
             newButton.addEventListener('click', function () {
@@ -210,5 +222,6 @@ function init() {
         recentSearches = [];
     }
 }
+
 
 init();
