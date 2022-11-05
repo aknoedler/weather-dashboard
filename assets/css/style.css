@@ -42,3 +42,8 @@ h3{
     background-color: var(--three);
     color: var(--five);
 }
+
+.forecastWeather {
+    background-color: var(--three);
+    color: var(--five);
+}
