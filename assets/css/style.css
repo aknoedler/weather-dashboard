@@ -1,0 +1,44 @@
+:root{
+    --one: #7C7287;
+    --two: #9dc0bc;
+    --three: #01172f;
+    --four: #00635d;
+    --five: #C1fff2;
+}
+
+header{
+    background-color: var(--four);
+}
+
+body{
+    background-color: var(--two);
+    height: 100vh;
+}
+
+i{
+    color: ivory;
+    display: inline;
+    margin-left: 24px;
+}
+
+h1{
+    color: var(--three);
+    text-align: center;
+    font-size: 48px;
+}
+
+h3{
+    /* display: inline; */
+    margin-left: 24px;
+    font-size: 28px;
+}
+
+.card-content{
+    white-space: pre;
+}
+
+
+.currentWeather {
+    background-color: var(--three);
+    color: var(--five);
+}

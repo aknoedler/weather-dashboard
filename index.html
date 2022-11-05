@@ -1,16 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Dashboard</title>
-    <link rel="stylesheet" href = "./assets/css/normalize.css"/>
-    <link rel="stylesheet" href = "./assets/css/style.css"/>
+    <link rel="stylesheet" href="./assets/css/normalize.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <script src="https://kit.fontawesome.com/c631aa5f09.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./assets/css/style.css" />
 </head>
-<body>
 
+<body>
+    <header>
+        <h1>Your Weather Dashboard</h1>
+    </header>
+    <main>
+        <aside>
+            <section id="search">
+                <h2>Search</h2>
+                <form>
+                    <input id="searchField">
+                    <button id="searchBtn">Submit</button>
+                </form>
+            </section>
+            <section id="searchHistory">
+
+            </section>
+        </aside>
+        <section id="results">
+        </section>
+    </main>
 </body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script src="./assets/js/script.js"></script>
+
 </html>
