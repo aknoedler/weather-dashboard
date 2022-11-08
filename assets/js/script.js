@@ -7,6 +7,8 @@ var recentSearches = JSON.parse(localStorage.getItem('storedSearches'));
 
 var key = 'b261f7124e086b6cd8b5cdda662c5ba8';
 
+// Finds the latitude and logitude for the searched city, then calls functions to pull the weather data for those
+// coordinates and create the card elements displaying that data
 function displayResults(cityName) {
     if (cityName) {
         let url = 'https://api.openweathermap.org/geo/1.0/direct?q=' + cityName + '&limit=1&appid=' + key;
@@ -19,13 +21,16 @@ function displayResults(cityName) {
                     cityTitle.textContent = "Here's the forecast for " + cityName + ":";
                     resultsSection.appendChild(cityTitle);
                     let coordinates = "lat=" + result[0].lat + "&lon=" + result[0].lon;
+                    // Creates the card for the current day's forecast
                     createCurrentCard(coordinates);
+                    // Creates the cards for the next five days
                     createForecastCards(coordinates);
                     if (citySearchField.value) {
                         addToHistory(citySearchField.value);
                     }
                     citySearchField.value = '';
                 } else {
+                    // Exception case if the entered text is not a valid city
                     let errorMessage = document.createElement('h2');
                     errorMessage.textContent = '"' + cityName + '" was not found. Please enter a city name.';
                     resultsSection.appendChild(errorMessage);
@@ -33,6 +38,7 @@ function displayResults(cityName) {
 
             })
     } else {
+        // Exception case if no text is entered
         let errorMessage = document.createElement('h2');
         errorMessage.textContent = 'Please enter a city name!';
         resultsSection.appendChild(errorMessage);
@@ -98,6 +104,8 @@ function createForecastCards(coordinates) {
         .then(function (response) {
             return response.json();
         }).then(function (result) {
+            // The forecast fetch pulls data in 3 hour increments; this function searches for each day's noon forecast
+            // and returns an array of the appropriate indices
             let forecastTimestamps = pickForecasts(result);
             for (i = 0; i < 5; i++) {
                 let main = result.list[forecastTimestamps[i]].weather[0].main;
@@ -163,6 +171,7 @@ function pickForecasts(result) {
     return pickedForecasts;
 }
 
+// Function to clear the results field
 function clearResults() {
     var resultsElements = Array.from(resultsSection.children);
     resultsElements.forEach(element => {
@@ -170,6 +179,7 @@ function clearResults() {
     });
 }
 
+// Function to add a recently stored city name to local storage and create a new button on the list
 function addToHistory(cityName) {
     for (i = 0; i < recentSearches.length; i++) {
         if (recentSearches[i] == cityName) {
@@ -188,6 +198,7 @@ function addToHistory(cityName) {
     })
 }
 
+// Event listener for the city search button
 citySearchBtn.addEventListener('click', function (event) {
     event.preventDefault();
     clearResults();
@@ -205,6 +216,9 @@ clearButton.addEventListener('click', function () {
     });
 })
 
+
+// On init, pull the stored searches from local storage and display them.
+
 function init() {
     if (recentSearches) {
         for (i = 0; i < recentSearches.length; i++) {
@@ -219,6 +233,7 @@ function init() {
         }
 
     } else {
+        // Create an empty array for the stored searches if there are none
         recentSearches = [];
     }
 }
