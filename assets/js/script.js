@@ -9,7 +9,7 @@ var key = 'b261f7124e086b6cd8b5cdda662c5ba8';
 
 function displayResults(cityName) {
     if (cityName) {
-        let url = 'http://api.openweathermap.org/geo/1.0/direct?q=' + cityName + '&limit=1&appid=' + key;
+        let url = 'https://api.openweathermap.org/geo/1.0/direct?q=' + cityName + '&limit=1&appid=' + key;
         fetch(url)
             .then(function (response) {
                 return response.json();
@@ -222,6 +222,5 @@ function init() {
         recentSearches = [];
     }
 }
-
 
 init();
